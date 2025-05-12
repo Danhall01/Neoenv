@@ -75,10 +75,7 @@ return {
     -- Devicons (Nerdfont icons)
     {
         "nvim-tree/nvim-web-devicons",
-        opts = {}
     },
-
-
 
     -- Indentation visualiser
     {
@@ -129,6 +126,75 @@ return {
                 end
             });
         end
+    },
+
+    -- LuaLine
+    {
+        "nvim-lualine/lualine.nvim",
+        lazy = false,
+        priority = 0,
+        dependensies = {
+            "nvim-tree/nvim-web-devicons",
+        },
+        opts = {
+            options = {
+                icons_enabled = true,
+                theme = "horizon",
+                component_separators = { left = '', right = '' },
+                section_separators = { left = '', right = '' },
+                disabled_filetypes = {
+                    statusline = {},
+                    winbar = {},
+                },
+                ignore_focus = {},
+                always_divide_middle = true,
+                always_show_tabline = true,
+                globalstatus = false,
+                refresh = {
+                    statusline = 100,
+                    tabline = 100,
+                    winbar = 100,
+                }
+            },
+            sections = {
+                lualine_a = { "mode" },
+                lualine_b = { "branch", "diff", "diagnostics" },
+                lualine_c = {},
+                lualine_x = { "encoding", "filetype" },
+                lualine_y = { "lsp_status", "progress" },
+                lualine_z = { "location", "fileformat" }
+            },
+            inactive_sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = { "filename" },
+                lualine_x = { "location" },
+                lualine_y = {},
+                lualine_z = {}
+            },
+            tabline = {
+                lualine_a = { "filename" },
+                lualine_b = { function()
+                    local context = require("nvim-treesitter").statusline(
+                        {
+                            indicator_size = 800,
+                            type_patterns = { "class", "function", "method", "interface", "type_spec", "table", "if_statement", "for_in_statement" },
+                            separator = "  ",
+                        }
+                    );
+                    if not context then return "" end;
+                    if context == "" then return "global" end;
+                    return context;
+                end },
+                lualine_c = {},
+                lualine_x = {},
+                lualine_y = {},
+                lualine_z = {}
+            },
+            winbar = {},
+            inactive_winbar = {},
+            extensions = {}
+        },
     },
 
 }

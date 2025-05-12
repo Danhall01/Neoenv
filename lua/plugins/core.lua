@@ -136,11 +136,9 @@ return {
                     if warningc > 0 then
                         analytics_msg = analytics_msg .. "\n" .. tostring(warningc) .. " warning(s)";
                     end
-
-                    vim.notify(analytics_msg, analytics_severity, { title = "Code Analysis" });
-
-
-                    if #diagnostics == 0 then return end;
+                    if warningc + #diagnostics > 0 then
+                        vim.notify(analytics_msg, analytics_severity, { title = "Code Analysis" });
+                    end
 
                     -- Send the error messages as notifications
                     for _, diagnostic in ipairs(diagnostics) do
@@ -148,7 +146,7 @@ return {
                             {
                                 title = string.format("%s (%s:%s)", diagnostic.code, diagnostic.lnum + 1,
                                     diagnostic.col + 1)
-                            })
+                            });
                     end
                 end,
             });
@@ -188,15 +186,15 @@ return {
                 desc = "Swap between .h and .c files"
             },
 
-            { "D",         function() vim.lsp.buf.definition(); end,      mode = 'n', desc = "Go to definition" },
-            { "<leader>d", function() vim.lsp.buf.declaration(); end,     mode = 'n', desc = "Go to declaration" },
-            { "T",         function() vim.lsp.buf.type_definition(); end, mode = 'n', desc = "Go to type definition" },
-            { "I",         function() vim.lsp.buf.implementation(); end,  mode = 'n', desc = "Go to implementation" },
-            { "F",         function() vim.lsp.buf.references(); end,      mode = 'n', desc = "Find all references" },
-            { "K",         function() vim.lsp.buf.hover(); end,           mode = 'n', desc = "Open window with information of hovered element" },
+            --{ "D",          function() vim.lsp.buf.definition(); end,      mode = 'n', desc = "Go to definition" },
+            { "<leader>gd", function() vim.lsp.buf.declaration(); end,    mode = 'n', desc = "Go to declaration" },
+            --{ "T",          function() vim.lsp.buf.type_definition(); end, mode = 'n', desc = "Go to type definition" },
+            { "I",          function() vim.lsp.buf.implementation(); end, mode = 'n', desc = "Go to implementation" },
+            --{ "F",          function() vim.lsp.buf.references(); end,      mode = 'n', desc = "Find all references" },
+            { "K",          function() vim.lsp.buf.hover(); end,          mode = 'n', desc = "Open window with information of hovered element" },
 
-            { "<F2>",      function() vim.lsp.buf.rename(); end,          mode = 'n', desc = "Rename hovered element" },
-            { "<leader>F", function() vim.lsp.buf.code_action(); end,     mode = 'n', desc = "Attempt to fix problem under hover" },
+            { "<F2>",       function() vim.lsp.buf.rename(); end,         mode = 'n', desc = "Rename hovered element" },
+            { "<leader>ca", function() vim.lsp.buf.code_action(); end,    mode = 'n', desc = "Attempt to fix problem under hover" },
         },
     },
     -- Auto-Completion
@@ -342,6 +340,7 @@ return {
     -- Extended colors for blink.cmp
     {
         "xzbdmw/colorful-menu.nvim",
+        lazy = false,
         config = function()
             -- You don't need to set these options.
             require("colorful-menu").setup({
@@ -381,9 +380,8 @@ return {
     -- Auto pairs
     {
         "windwp/nvim-autopairs",
-
+        lazy = false,
         config = true,
-
     },
 
     -- Treesitter
@@ -395,7 +393,7 @@ return {
         end,
         keys = {},
         init = function()
-            require 'nvim-treesitter.configs'.setup {
+            require("nvim-treesitter.configs").setup {
                 -- A list of parser names, or "all"
                 ensure_installed = { "c", "lua", "vim", "vimdoc" },
                 ignore_install = {},
@@ -426,19 +424,31 @@ return {
     {
         "nvim-telescope/telescope.nvim",
         branch = "0.1.x",
-        priority = 10,
+        lazy = false,
+        priority = 100,
         dependencies = {
             "nvim-lua/plenary.nvim",
             "BurntSushi/ripgrep",
             "nvim-telescope/telescope-fzf-native.nvim",
             "nvim-tree/nvim-web-devicons"
         },
-        opts = {
-
-        },
         keys = {
-            { "<leader>nf", function() require("telescope.builtin").find_files() end, mode = "n", desc = "Navigate files with telescope" },
-            { "<leader>fg", function() require("telescope.builtin").live_grep() end,  mode = "n", desc = "Search cwd with live grep" },
+            --- Navigation
+            { "<leader>nf", function() require("telescope.builtin").find_files() end,           mode = 'n', desc = "Navigate files with telescope" },
+            { "<leader>ns", function() require("telescope.builtin").live_grep() end,            mode = 'n', desc = "Search cwd with live grep" },
+            { "<leader>ns", function() require("telescope.builtin").grep_string() end,          mode = 'v', desc = "Grabs the currently selected area into the search" },
+            { "<leader>hk", function() require("telescope.builtin").keymaps() end,              mode = 'n', desc = "Get current keymaps (Help)" },
+
+            --- LSP
+            { "F",          function() require("telescope.builtin").lsp_references() end,       mode = 'n', desc = "Get all references through telescope" },
+            { "D",          function() require("telescope.builtin").lsp_definitions() end,      mode = 'n', desc = "Find definition, open telescope if there are multiple" },
+            { "<leader>D",  function() require("telescope.builtin").lsp_type_definitions() end, mode = 'n', desc = "Find type definitions, open telescope if multiple" },
+
+            --- Git
+            { "<leader>gb", function() require("telescope.builtin").git_branches() end,         mode = 'n', desc = "List all branches with telescope" },
+
+            --- Misc
+            { "<leader>ts", function() require("telescope.builtin").treesitter() end,           mode = 'n', desc = "Lists functions and variables from treesitter" },
 
         },
     },
