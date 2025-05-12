@@ -127,12 +127,27 @@ return {
                             --vim.diagnostic.severity.WARN,
                         }
                     });
+
+                    -- Analysis info which shows amount of warnings and errors
+                    local analytics_msg = tostring(#diagnostics) .. " error(s)";
+                    local analytics_severity = 3;
+
+                    local warningc = #vim.diagnostic.get(0, { severity = { vim.diagnostic.severity.WARN } });
+                    if warningc > 0 then
+                        analytics_msg = analytics_msg .. "\n" .. tostring(warningc) .. " warning(s)";
+                    end
+
+                    vim.notify(analytics_msg, analytics_severity, { title = "Code Analysis" });
+
+
+                    if #diagnostics == 0 then return end;
+
+                    -- Send the error messages as notifications
                     for _, diagnostic in ipairs(diagnostics) do
-                        vim.notify(diagnostic.message, hl_type[diagnostic.severity],
+                        vim.notify(diagnostic.message, 4,
                             {
                                 title = string.format("%s (%s:%s)", diagnostic.code, diagnostic.lnum + 1,
-                                    diagnostic.col +
-                                    1)
+                                    diagnostic.col + 1)
                             })
                     end
                 end,
@@ -163,7 +178,7 @@ return {
                         end
                     end
                     if not found then
-                        vim.notify("Trying to swap header-source files outside of C/C++", "Error",
+                        vim.notify("Cannot swap header-source files outside of C/C++", 4,
                             { title = "Invalid filetype for operation", })
                         return;
                     end
@@ -218,6 +233,39 @@ return {
                 -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
                 nerd_font_variant = 'normal',
+
+                kind_icons = {
+                    Text = '󰉿',
+                    Method = '󰊕',
+                    Function = '󰊕',
+                    Constructor = '󰒓',
+
+                    Field = '󰜢',
+                    Variable = '󰆦',
+                    Property = '󰖷',
+
+                    Class = '󱡠',
+                    Interface = '󱡠',
+                    Struct = '󱡠',
+                    Module = '󰅩',
+
+                    Unit = '󰪚',
+                    Value = '󰦨',
+                    Enum = '󰦨',
+                    EnumMember = '󰦨',
+
+                    Keyword = '󰻾',
+                    Constant = '󰏿',
+
+                    Snippet = '󱄽',
+                    Color = '󰏘',
+                    File = '󰈔',
+                    Reference = '󰬲',
+                    Folder = '󰉋',
+                    Event = '󱐋',
+                    Operator = '󰪚',
+                    TypeParameter = '󰬛',
+                },
             },
 
             -- Default list of enabled providers defined so that you can extend it
@@ -229,14 +277,19 @@ return {
             -- Custom
             completion = {
                 list = {
-                    selection = { preselect = false, auto_insert = false },
+                    selection = {
+                        preselect = function()
+                            return vim.fn.mode() == 'i';
+                        end,
+                        auto_insert = false
+                    },
                 },
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 100,
                     treesitter_highlighting = true,
                     window = {
-                        border = "rounded",
+                        border = "double",
                         winblend = 0,
                         scrollbar = false,
                     }
@@ -244,13 +297,15 @@ return {
                 ghost_text = { enabled = true, show_with_selection = true, show_without_selection = false },
                 menu = {
                     enabled = true,
-                    border = "single",
+                    border = "rounded",
                     winblend = 0,
                     scrollbar = false,
                     auto_show = true,
                     winhighlight =
                     "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
                     draw = {
+                        treesitter = { "lsp" },
+                        padding = 2,
                         columns = { { "kind_icon" }, { "label", gap = 1 } },
                         components = {
                             label = {
@@ -323,6 +378,14 @@ return {
         end,
     },
 
+    -- Auto pairs
+    {
+        "windwp/nvim-autopairs",
+
+        config = true,
+
+    },
+
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
@@ -358,5 +421,32 @@ return {
             vim.cmd("TSUpdate");
         end,
     },
+
+    -- Telescope / search box
+    {
+        "nvim-telescope/telescope.nvim",
+        branch = "0.1.x",
+        priority = 10,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "BurntSushi/ripgrep",
+            "nvim-telescope/telescope-fzf-native.nvim",
+            "nvim-tree/nvim-web-devicons"
+        },
+        opts = {
+
+        },
+        keys = {
+            { "<leader>nf", function() require("telescope.builtin").find_files() end, mode = "n", desc = "Navigate files with telescope" },
+            { "<leader>fg", function() require("telescope.builtin").live_grep() end,  mode = "n", desc = "Search cwd with live grep" },
+
+        },
+    },
+    -- Telescope dependencies
+    {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release"
+    },
+
 
 }

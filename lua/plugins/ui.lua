@@ -17,6 +17,9 @@ return {
         'projekt0n/github-nvim-theme',
         lazy = false,
         priority = 1000,
+        dependensies = {
+            "nvim-tree/nvim-web-devicons",
+        },
         config = function()
             local Color = require('github-theme.lib.color')
 
@@ -68,6 +71,14 @@ return {
             vim.cmd("colorscheme github_dark")
         end
     },
+
+    -- Devicons (Nerdfont icons)
+    {
+        "nvim-tree/nvim-web-devicons",
+        opts = {}
+    },
+
+
 
     -- Indentation visualiser
     {
