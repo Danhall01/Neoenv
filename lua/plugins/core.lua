@@ -57,6 +57,14 @@ return {
                         fallbackFlags = { "-Wall", "-Wextra", "-Wpedantic", },
                     },
                 },
+                cmake = {
+                    cmd = {
+                        "cmake-language-server",
+                    },
+                    init_options = {
+                        buildDirectory = "build",
+                    },
+                },
             },
         },
         config = function(_, opts)
