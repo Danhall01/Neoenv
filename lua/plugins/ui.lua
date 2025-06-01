@@ -34,9 +34,16 @@ return {
             -- "Mint skyline" - Nick // @Creator Daniel Häll
             local typeclr = "#26867d";
             local varclr = "#add7ff";
-            local constclr = "#5de4c7";
+            local constclr = "#9A67FF";
             local spec = {
                 github_dark = {
+                    red = "#C43022",
+
+
+                    bg1 = "#454551",
+                    bg0 = "#1B1B2D",
+
+
                     syntax = {
                         -- bracket = "",
                         builtin0 = varclr,
@@ -48,8 +55,8 @@ return {
                         -- field = "",
                         func = "#01f9c6",
                         -- ident = "",
-                        keyword = "#557bad",
-                        number = "#add7ff",
+                        keyword = "#5F8CE6",
+                        number = "#DDC697",
                         -- operator = "",
                         preproc = constclr,
                         regex = "#e2bec6",
@@ -57,10 +64,11 @@ return {
                         string = "#91b4d5",
                         type = typeclr,
                         variable = varclr,
-                    }
-                }
-            }
+                    },
 
+                    inactive = "bg0",
+                },
+            };
 
             require('github-theme').setup({
                 options = opts,
@@ -139,7 +147,8 @@ return {
         opts = {
             options = {
                 icons_enabled = true,
-                theme = "horizon",
+                -- theme = "horizon",
+                theme = "poimandres",
                 component_separators = { left = '', right = '' },
                 section_separators = { left = '', right = '' },
                 disabled_filetypes = {
