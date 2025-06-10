@@ -71,6 +71,17 @@ return {
         end
     },
 
+    -- Inline colors
+    {
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        opts = { -- set to setup table
+        },
+        keys = {
+            { "<leader>ct", function() vim.cmd("ColorizerToggle") end,           mode = 'n', desc = "Toggle inline colors" },
+        },
+    },
+
     -- Devicons (Nerdfont icons)
     {
         "nvim-tree/nvim-web-devicons",
