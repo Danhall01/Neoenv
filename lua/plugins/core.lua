@@ -168,10 +168,8 @@ return {
             });
         end,
         keys = {
-            { "<leader>D", function() vim.diagnostic.open_float(0, { scope = "line" }); end },
-
-            { "<C-j>",     function() vim.diagnostic.goto_next(); end,                      mode = 'n', desc = "Jump to next error" },
-            { "<C-k>",     function() vim.diagnostic.goto_prev(); end,                      mode = 'n', desc = "Jump to previous error" },
+            { "<C-j>", function() vim.diagnostic.goto_next(); end, mode = 'n', desc = "Jump to next error" },
+            { "<C-k>", function() vim.diagnostic.goto_prev(); end, mode = 'n', desc = "Jump to previous error" },
             {
                 "<C-w>",
                 function()
@@ -395,33 +393,20 @@ return {
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         lazy = false,
         priority = 100,
         config = function()
         end,
         keys = {},
         init = function()
-            require("nvim-treesitter.configs").setup {
-                -- A list of parser names, or "all"
-                ensure_installed = { "c", "lua", "vim", "vimdoc" },
-                ignore_install = {},
-                modules = {},
-
-                -- Install parsers synchronously (only applied to `ensure_installed`)
-                sync_install = false,
-
-                -- Automatically install missing parsers when entering buffer
-                auto_install = true,
-
-                highlight = {
-                    enable = true,
-                    additional_vim_regex_highlighting = false,
-                },
-                indent = {
-                    -- Experimental
-                    enable = true,
-                },
-            }
+            require("nvim-treesitter").install { 'c', "lua", "vim", "vimdoc" }
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "*.c", "*.cpp", "*.h", "*.hpp" },
+                callback = function() vim.treesitter.start() end,
+            })
+            vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.bo.indentexpr = "v:vim.require'nvim-treesitter'.indentexpr()"
         end,
         build = function()
             vim.cmd("TSUpdate");
