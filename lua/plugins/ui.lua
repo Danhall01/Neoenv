@@ -37,13 +37,6 @@ return {
             local constclr = "#9A67FF";
             local spec = {
                 github_dark = {
-                    red = "#C43022",
-
-
-                    bg1 = "#454551",
-                    bg0 = "#1B1B2D",
-
-
                     syntax = {
                         -- bracket = "",
                         builtin0 = varclr,
@@ -65,8 +58,6 @@ return {
                         type = typeclr,
                         variable = varclr,
                     },
-
-                    inactive = "bg0",
                 },
             };
 
