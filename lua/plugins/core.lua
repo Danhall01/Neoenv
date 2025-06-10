@@ -83,8 +83,8 @@ return {
             end
         end,
         keys = {
-            { "<C-j>", function() vim.diagnostic.jump({ count = -1 }); end, mode = 'n', desc = "Jump to next error" },
-            { "<C-k>", function() vim.diagnostic.jump({ count = 1 }); end,  mode = 'n', desc = "Jump to previous error" },
+            { "<C-j>", function() vim.diagnostic.jump({ count = -1, float=true }); end, mode = 'n', desc = "Jump to next error" },
+            { "<C-k>", function() vim.diagnostic.jump({ count = 1, float=true }); end,  mode = 'n', desc = "Jump to previous error" },
             {
                 "<C-w>",
                 function()
@@ -331,7 +331,7 @@ return {
     -- Telescope / search box
     {
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        branch = "master",
         lazy = false,
         priority = 100,
         dependencies = {
@@ -356,8 +356,8 @@ return {
             { "<leader>gb", function() require("telescope.builtin").git_branches() end,         mode = 'n', desc = "List all branches with telescope" },
 
             --- Misc
-            { "<leader>ts", function() require("telescope.builtin").treesitter() end,           mode = 'n', desc = "Lists functions and variables from treesitter" },
-
+            { "<leader>fs", function() require("telescope.builtin").lsp_document_symbols({symbols="function"}) end,           mode = 'n', desc = "Lists functions from treesitter" },
+            { "<leader>ts", function() require("telescope.builtin").lsp_document_symbols({}) end,           mode = 'n', desc = "Lists all lsp symbols from treesitter" },
         },
     },
     -- Telescope dependencies
