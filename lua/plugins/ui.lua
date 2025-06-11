@@ -21,7 +21,7 @@ return {
             "nvim-tree/nvim-web-devicons",
         },
         config = function()
-            local Color = require('github-theme.lib.color')
+            --local Color = require('github-theme.lib.color')
 
             local opts = {
                 transparent = true,
@@ -31,7 +31,6 @@ return {
                 },
             }
 
-            local base_white = "#ddeeeb"
             -- "Mint skyline" - Nick // @Creator Daniel Häll
             local spec = {
                 github_dark = {
@@ -69,9 +68,9 @@ return {
             --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
             vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg="#6D35A9", bg="none" }); -- Macro
             vim.api.nvim_set_hl(0, "@lsp.type.variable", {fg="#A9CAE9"})
-            
+
             vim.api.nvim_set_hl(0, "cStorageClass", {fg = "#1D8A99"}); -- E.g static 
-        
+
             vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg="#7153AC" }); -- struct / class
             vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", {fg="#86B3DF"}); -- class.property (Higher order in c/c++)
             vim.api.nvim_set_hl(0, "@lsp.type.property", {fg="#86B3DF"}); -- table.property
@@ -160,7 +159,7 @@ return {
             options = {
                 icons_enabled = true,
                 -- theme = "horizon",
-                theme = "poimandres",
+                theme = "github_dark",
                 component_separators = { left = '', right = '' },
                 section_separators = { left = '', right = '' },
                 disabled_filetypes = {
