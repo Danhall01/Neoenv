@@ -66,17 +66,17 @@ return {
         init = function()
             vim.cmd("colorscheme github_dark")
             --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
-            vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg="#6D35A9", bg="none" }); -- Macro
-            vim.api.nvim_set_hl(0, "@lsp.type.variable", {fg="#A9CAE9"})
+            vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg = "#6D35A9", bg = "none" }); -- Macro
+            vim.api.nvim_set_hl(0, "@lsp.type.variable", { fg = "#A9CAE9" })
 
-            vim.api.nvim_set_hl(0, "cStorageClass", {fg = "#1D8A99"}); -- E.g static 
+            vim.api.nvim_set_hl(0, "cStorageClass", { fg = "#1D8A99" });                          -- E.g static
 
-            vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg="#7153AC" }); -- struct / class
-            vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", {fg="#86B3DF"}); -- class.property (Higher order in c/c++)
-            vim.api.nvim_set_hl(0, "@lsp.type.property", {fg="#86B3DF"}); -- table.property
+            vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg = "#7153AC" });         -- struct / class
+            vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", { fg = "#86B3DF" });     -- class.property (Higher order in c/c++)
+            vim.api.nvim_set_hl(0, "@lsp.type.property", { fg = "#86B3DF" });                     -- table.property
 
-            vim.api.nvim_set_hl(0, "@lsp.typemod.function.definition.c", {fg="#025A66"}); -- ... fname(...){}
-            vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", {fg="#81B6EA"}); -- ...(type Param)
+            vim.api.nvim_set_hl(0, "@lsp.typemod.function.definition.c", { fg = "#025A66" });     -- ... fname(...){}
+            vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", { fg = "#81B6EA" }); -- ...(type Param)
         end
     },
 
@@ -87,7 +87,7 @@ return {
         opts = { -- set to setup table
         },
         keys = {
-            { "<leader>ct", function() vim.cmd("ColorizerToggle") end,           mode = 'n', desc = "Toggle inline colors" },
+            { "<leader>ct", function() vim.cmd("ColorizerToggle") end, mode = 'n', desc = "Toggle inline colors" },
         },
     },
 
@@ -215,6 +215,18 @@ return {
             inactive_winbar = {},
             extensions = {}
         },
+    },
+
+    -- Replacement for `messages`, `cmdline`, and `popupmenu`
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- add any options here
+        },
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        }
     },
 
 }
