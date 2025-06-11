@@ -315,7 +315,6 @@ return {
         end,
         keys = {},
         init = function()
-            require("nvim-treesitter").install { 'c', "lua", "vim", "vimdoc" }
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = { "*.c", "*.cpp", "*.h", "*.hpp" },
                 callback = function() vim.treesitter.start() end,
@@ -325,6 +324,7 @@ return {
         end,
         build = function()
             vim.cmd("TSUpdate");
+            require("nvim-treesitter").install { 'c', "lua", "vim", "vimdoc" }
         end,
     },
 
