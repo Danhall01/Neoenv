@@ -31,36 +31,34 @@ return {
                 },
             }
 
+            local base_white = "#ddeeeb"
             -- "Mint skyline" - Nick // @Creator Daniel Häll
-            local typeclr = "#26867d";
-            local varclr = "#add7ff";
-            local constclr = "#9A67FF";
             local spec = {
                 github_dark = {
                     syntax = {
-                        -- bracket = "",
-                        builtin0 = varclr,
-                        builtin1 = typeclr,
-                        builtin2 = constclr,
+                        --bracket = "#900000",
+                        --builtin0 = "#900000",
+                        --builtin1 = "#900000",
+                        --builtin2 = "#900000",
                         comment = "#7390aa",
-                        -- conditional = "",
-                        const = constclr,
-                        -- field = "",
-                        func = "#01f9c6",
-                        -- ident = "",
-                        keyword = "#5F8CE6",
-                        number = "#DDC697",
-                        -- operator = "",
-                        preproc = constclr,
+                        conditional = "#135048",
+                        const = "#31EAEA",
+                        --dep = "#900000",
+                        --field = "#900000",
+                        func = "#399AA8",
+                        --ident = "#900000",
+                        keyword = "#9A67FF",
+                        number = "#31EAEA",
+                        --operator = "#900000",
+                        preproc = "#6C58A6",
                         regex = "#e2bec6",
-                        -- statement = "",
+                        --statement = "#900000",
                         string = "#91b4d5",
-                        type = typeclr,
-                        variable = varclr,
+                        type = "#26867d",
+                        variable = "#A9CAE9",
                     },
                 },
             };
-
             require('github-theme').setup({
                 options = opts,
                 specs = spec,
@@ -68,6 +66,18 @@ return {
         end,
         init = function()
             vim.cmd("colorscheme github_dark")
+            --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
+            vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg="#6D35A9", bg="none" }); -- Macro
+            vim.api.nvim_set_hl(0, "@lsp.type.variable", {fg="#A9CAE9"})
+            
+            vim.api.nvim_set_hl(0, "cStorageClass", {fg = "#1D8A99"}); -- E.g static 
+        
+            vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg="#7153AC" }); -- struct / class
+            vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", {fg="#86B3DF"}); -- class.property (Higher order in c/c++)
+            vim.api.nvim_set_hl(0, "@lsp.type.property", {fg="#86B3DF"}); -- table.property
+
+            vim.api.nvim_set_hl(0, "@lsp.typemod.function.definition.c", {fg="#025A66"}); -- ... fname(...){}
+            vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", {fg="#81B6EA"}); -- ...(type Param)
         end
     },
 
