@@ -36,9 +36,6 @@ vim.diagnostic.config({
         focusable = false,
         source = "if_many",
     },
-    jump = {
-        float = true,
-    }
 });
 
 -- Register autocmds (auto format + auto notify)
