@@ -83,8 +83,8 @@ return {
             end
         end,
         keys = {
-            { "<C-j>", function() vim.diagnostic.jump({ count = -1, float=true }); end, mode = 'n', desc = "Jump to next error" },
-            { "<C-k>", function() vim.diagnostic.jump({ count = 1, float=true }); end,  mode = 'n', desc = "Jump to previous error" },
+            { "<C-j>", function() vim.diagnostic.jump({ count = -1, float = true }); end, mode = 'n', desc = "Jump to next error" },
+            { "<C-k>", function() vim.diagnostic.jump({ count = 1, float = true }); end,  mode = 'n', desc = "Jump to previous error" },
             {
                 "<C-w>",
                 function()
@@ -190,7 +190,14 @@ return {
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { 'lsp', 'path', 'snippets', 'buffer' },
+                default = { "lazydev", 'lsp', 'path', 'snippets', 'buffer' },
+                providers = {
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                        score_offset = 100,
+                    }
+                }
             },
 
             -- Custom
@@ -297,6 +304,19 @@ return {
             });
         end,
     },
+    -- Extended LUA support for Blink.cmp
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                "nvim-dap-ui",
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 
     -- Auto pairs
     {
@@ -342,22 +362,22 @@ return {
         },
         keys = {
             --- Navigation
-            { "<leader>nf", function() require("telescope.builtin").find_files() end,           mode = 'n', desc = "Navigate files with telescope" },
-            { "<leader>ns", function() require("telescope.builtin").live_grep() end,            mode = 'n', desc = "Search cwd with live grep" },
-            { "<leader>ns", function() require("telescope.builtin").grep_string() end,          mode = 'v', desc = "Grabs the currently selected area into the search" },
-            { "<leader>hk", function() require("telescope.builtin").keymaps() end,              mode = 'n', desc = "Get current keymaps (Help)" },
+            { "<leader>nf", function() require("telescope.builtin").find_files() end,                                   mode = 'n', desc = "Navigate files with telescope" },
+            { "<leader>ns", function() require("telescope.builtin").live_grep() end,                                    mode = 'n', desc = "Search cwd with live grep" },
+            { "<leader>ns", function() require("telescope.builtin").grep_string() end,                                  mode = 'v', desc = "Grabs the currently selected area into the search" },
+            { "<leader>hk", function() require("telescope.builtin").keymaps() end,                                      mode = 'n', desc = "Get current keymaps (Help)" },
 
             --- LSP
-            { "F",          function() require("telescope.builtin").lsp_references() end,       mode = 'n', desc = "Get all references through telescope" },
-            { "D",          function() require("telescope.builtin").lsp_definitions() end,      mode = 'n', desc = "Find definition, open telescope if there are multiple" },
-            { "<leader>D",  function() require("telescope.builtin").lsp_type_definitions() end, mode = 'n', desc = "Find type definitions, open telescope if multiple" },
+            { "F",          function() require("telescope.builtin").lsp_references() end,                               mode = 'n', desc = "Get all references through telescope" },
+            { "D",          function() require("telescope.builtin").lsp_definitions() end,                              mode = 'n', desc = "Find definition, open telescope if there are multiple" },
+            { "<leader>D",  function() require("telescope.builtin").lsp_type_definitions() end,                         mode = 'n', desc = "Find type definitions, open telescope if multiple" },
 
             --- Git
-            { "<leader>gb", function() require("telescope.builtin").git_branches() end,         mode = 'n', desc = "List all branches with telescope" },
+            { "<leader>gb", function() require("telescope.builtin").git_branches() end,                                 mode = 'n', desc = "List all branches with telescope" },
 
             --- Misc
-            { "<leader>fs", function() require("telescope.builtin").lsp_document_symbols({symbols="function"}) end,           mode = 'n', desc = "Lists functions from treesitter" },
-            { "<leader>ts", function() require("telescope.builtin").lsp_document_symbols({}) end,           mode = 'n', desc = "Lists all lsp symbols from treesitter" },
+            { "<leader>fs", function() require("telescope.builtin").lsp_document_symbols({ symbols = "function" }) end, mode = 'n', desc = "Lists functions from treesitter" },
+            { "<leader>ts", function() require("telescope.builtin").lsp_document_symbols({}) end,                       mode = 'n', desc = "Lists all lsp symbols from treesitter" },
         },
     },
     -- Telescope dependencies
@@ -365,6 +385,146 @@ return {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release"
     },
+
+
+    -- CMake Workflow
+    {
+        "Civitasv/cmake-tools.nvim",
+        dependencies = {
+            "stevearc/overseer.nvim",
+            "akinsho/toggleterm.nvim",
+        },
+        lazy = false,
+        priority = 100,
+        opts = {
+            cmake_generate_options = {
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+                "-DCMAKE_C_COMPILER=clang",
+            },
+
+            cmake_build_directory = function()
+                local osys = require("cmake-tools.osys");
+                if osys.iswin32 then
+                    return "build\\${variant:buildType}"
+                end
+                return "build/${variant:buildType}"
+            end,
+            cmake_dap_configuration = { -- debug settings for cmake
+                name = "cpp",
+                type = "lldb",
+                request = "launch",
+                stopOnEntry = false,
+                runInTerminal = true,
+                console = "integratedTerminal",
+            },
+
+            cmake_executor = {
+                name = "terminal",
+                default_opts = {
+                    terminal = {
+                        split_size = 10,
+                    },
+                },
+            },
+
+            cmake_runner = {
+                default_opts = {
+                    terminal = {
+                        split_size = 10,
+                    },
+                },
+            },
+        },
+        keys = {
+            { "<F4>",         function() vim.cmd("CMakeRun"); end,             mode = 'n', desc = "CMake-tools: Build and run program" },
+            { "<leader><F5>", function() vim.cmd("CMakeDebugCurrentFile") end, mode = 'n', desc = "CMake-tools: Start debugger from current file" },
+            { "<F2>",         function() vim.cmd("CMakeSelectBuildType") end,  mode = 'n', desc = "CMake-tools: Select target configuration for CMake" },
+        },
+    },
+    {
+        "stevearc/overseer.nvim",
+        lazy = false,
+        priority = 101,
+        opts = {},
+    },
+    {
+        "akinsho/toggleterm.nvim",
+        version = "*",
+        lazy = false,
+        priority = 101,
+        opts = {
+
+        }
+    },
+
+    -- Debugging
+    {
+        "mfussenegger/nvim-dap",
+        lazy = false,
+        priority = 100,
+        config = function()
+            local dap = require("dap")
+            dap.adapters.lldb = {
+                type = 'executable',
+                command = '/usr/bin/lldb-dap', -- adjust as needed, must be absolute path
+                name = 'lldb'
+            }
+            dap.configurations.c = {
+                {
+                    name = 'Launch',
+                    type = 'lldb',
+                    request = 'launch',
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                    cwd = '${workspaceFolder}',
+                    stopOnEntry = false,
+                    args = {},
+                },
+            }
+            dap.configurations.cpp = dap.configurations.c;
+            dap.configurations.rust = dap.configurations.c;
+        end,
+        keys = {
+            { "<leader>db",  function() require("dap").toggle_breakpoint(); end, mode = 'n', desc = "dap: Set breakpoint" },
+            -- { "<leader>dc",  function() require("dap").toggle_breakpoint(); end,                                     mode = 'n', desc = "dap: Set conditional breakpoint" },
+
+            { "<F5>",        function() require("dap").continue(); end,          mode = 'n', desc = "dap: Continue execution" },
+            { "<shift><F5>", function() require("dap").restart(); end,           mode = 'n', desc = "dap: Restart execution" },
+
+            { "<F10>",       function() require("dap").step_over(); end,         mode = 'n', desc = "dap: Step over" },
+            { "<F11>",       function() require("dap").step_into(); end,         mode = 'n', desc = "dap: Step into" },
+            { "<F12>",       function() require("dap").step_out(); end,          mode = 'n', desc = "dap: Step out" },
+
+            { "<leader>ds",  function() require("dap.ui.widgets").hover(); end,  mode = 'n', desc = "dap: Inspect" },
+        },
+    },
+    {
+        "theHamsta/nvim-dap-virtual-text",
+        lazy = false,
+        priority = 100,
+        opts = {
+            only_first_definition = false,
+            all_references = true,
+
+            --virt_text_pos = "eol",
+            comment = true,
+        },
+    },
+    {
+        "rcarriga/nvim-dap-ui",
+        lazy = false,
+        priority = 100,
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio"
+        },
+        config = function()
+
+        end
+    },
+
+
 
 
 }
