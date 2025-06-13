@@ -1,3 +1,25 @@
+-- Ensure colorscheme is updated properly
+vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+    desc = "Updates certain items for color schemes",
+    pattern = { 'github_dark' },
+    callback = function()
+        --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
+        vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg = "#6D35A9", bg = "none" }); -- Macro
+        vim.api.nvim_set_hl(0, "@lsp.type.variable", { fg = "#A9CAE9" })
+
+        vim.api.nvim_set_hl(0, "cStorageClass", { fg = "#1D8A99" });                          -- E.g static
+
+        vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg = "#7153AC" });         -- struct / class
+        vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", { fg = "#86B3DF" });     -- class.property (Higher order in c/c++)
+        vim.api.nvim_set_hl(0, "@lsp.type.property", { fg = "#86B3DF" });                     -- table.property
+
+        vim.api.nvim_set_hl(0, "@lsp.typemod.function.definition.c", { fg = "#025A66" });     -- ... fname(...){}
+        vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", { fg = "#81B6EA" }); -- ...(type Param)
+
+        vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#232323" });                            -- Hover window
+    end,
+});
+
 return {
     -- Themes
     { -- Used by "LuaLine"
@@ -65,18 +87,6 @@ return {
         end,
         init = function()
             vim.cmd("colorscheme github_dark")
-            --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
-            vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg = "#6D35A9", bg = "none" }); -- Macro
-            vim.api.nvim_set_hl(0, "@lsp.type.variable", { fg = "#A9CAE9" })
-
-            vim.api.nvim_set_hl(0, "cStorageClass", { fg = "#1D8A99" });                          -- E.g static
-
-            vim.api.nvim_set_hl(0, "@lsp.typemod.class.filescope.c", { fg = "#7153AC" });         -- struct / class
-            vim.api.nvim_set_hl(0, "@lsp.typemod.property.classScope.c", { fg = "#86B3DF" });     -- class.property (Higher order in c/c++)
-            vim.api.nvim_set_hl(0, "@lsp.type.property", { fg = "#86B3DF" });                     -- table.property
-
-            vim.api.nvim_set_hl(0, "@lsp.typemod.function.definition.c", { fg = "#025A66" });     -- ... fname(...){}
-            vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", { fg = "#81B6EA" }); -- ...(type Param)
         end
     },
 
@@ -136,14 +146,14 @@ return {
             vim.notify = require("notify");
 
             vim.api.nvim_create_augroup("notify", { clear = true });
-            vim.api.nvim_create_autocmd({ "BufLeave", "BufEnter" }, {
-                desc = "Clear notify history when leaving / entering a new buffer",
-                pattern = "*.*",
-                group = "notify",
-                callback = function(_)
-                    vim.notify.clear_history();
-                end
-            });
+            -- vim.api.nvim_create_autocmd({ "BufLeave", "BufEnter" }, {
+            --     desc = "Clear notify history when leaving / entering a new buffer",
+            --     pattern = "*.*",
+            --     group = "notify",
+            --     callback = function(_)
+            --         vim.notify.clear_history();
+            --     end
+            -- });
         end
     },
 
@@ -222,7 +232,22 @@ return {
         "folke/noice.nvim",
         event = "VeryLazy",
         opts = {
-            -- add any options here
+            lsp = {
+                -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    --["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+                },
+            },
+            -- you can enable a preset for easier configuration
+            presets = {
+                bottom_search = true,         -- use a classic bottom cmdline for search
+                command_palette = true,       -- position the cmdline and popupmenu together
+                long_message_to_split = true, -- long messages will be sent to a split
+                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+                lsp_doc_border = true,        -- add a border to hover docs and signature help
+            },
         },
         dependencies = {
             "MunifTanjim/nui.nvim",
