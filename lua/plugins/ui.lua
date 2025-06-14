@@ -4,7 +4,7 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
     pattern = { 'github_dark' },
     callback = function()
         --vim.api.nvim_set_hl(0, "normal", {fg = "#2C8A86", bg="NONE"}); -- Default colors
-        vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg = "#6D35A9", bg = "none" }); -- Macro
+        vim.api.nvim_set_hl(0, "@lsp.typemod.macro.globalscope.c", { fg = "#57F5EF", bg = "none" }); -- Macro
         vim.api.nvim_set_hl(0, "@lsp.type.variable", { fg = "#A9CAE9" })
 
         vim.api.nvim_set_hl(0, "cStorageClass", { fg = "#1D8A99" });                          -- E.g static
@@ -17,6 +17,10 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
         vim.api.nvim_set_hl(0, "@lsp.typemod.parameter.functionScope.c", { fg = "#81B6EA" }); -- ...(type Param)
 
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#232323" });                            -- Hover window
+
+
+        vim.api.nvim_set_hl(0, "CursorLine", {
+            bg = "#232632" });
     end,
 });
 
