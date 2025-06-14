@@ -438,7 +438,7 @@ return {
         keys = {
             { "<F4>",         function() vim.cmd("CMakeRun"); end,             mode = 'n', desc = "CMake-tools: Build and run program" },
             { "<leader><F5>", function() vim.cmd("CMakeDebugCurrentFile") end, mode = 'n', desc = "CMake-tools: Start debugger from current file" },
-            { "<F2>",         function() vim.cmd("CMakeSelectBuildType") end,  mode = 'n', desc = "CMake-tools: Select target configuration for CMake" },
+            { "<leader><F2>", function() vim.cmd("CMakeSelectBuildType") end,  mode = 'n', desc = "CMake-tools: Select target configuration for CMake" },
         },
     },
     {
