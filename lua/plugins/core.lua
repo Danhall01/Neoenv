@@ -444,14 +444,14 @@ return {
     {
         "stevearc/overseer.nvim",
         lazy = false,
-        priority = 101,
+        priority = 100,
         opts = {},
     },
     {
         "akinsho/toggleterm.nvim",
         version = "*",
         lazy = false,
-        priority = 101,
+        priority = 100,
         opts = {
 
         }
@@ -502,13 +502,17 @@ return {
     {
         "theHamsta/nvim-dap-virtual-text",
         lazy = false,
+        dependencies = {
+            "mfussenegger/nvim-dap",
+        },
         priority = 100,
         opts = {
-            only_first_definition = false,
-            all_references = true,
+            enabled = true,
+            -- only_first_definition = false,
+            -- all_references = true,
 
             --virt_text_pos = "eol",
-            comment = true,
+            -- comment = true,
         },
     },
     {
@@ -518,6 +522,9 @@ return {
         dependencies = {
             "mfussenegger/nvim-dap",
             "nvim-neotest/nvim-nio"
+        },
+        opts = {
+
         },
         config = function()
 
