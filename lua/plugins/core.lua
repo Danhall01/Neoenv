@@ -65,6 +65,24 @@ return {
                         buildDirectory = "build",
                     },
                 },
+
+                -- Shader lsp
+                slangd = {
+                    cmd = {
+                        "slangd",
+                    },
+                    filetype = {
+                        "hlsl",
+                    }
+                },
+                glslls = {
+                    cmd = {
+                        "glslls", "--stdin"
+                    },
+                },
+
+
+
             },
         },
         config = function(_, opts)
